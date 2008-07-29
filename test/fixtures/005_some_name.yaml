@@ -1,0 +1,9 @@
+layout_name: blah
+1:
+  name: part 1
+  filter_id:
+  part_type_id: 1 
+2:
+  name: part 2
+  filter_id: Textile
+  part_type_id: 2
