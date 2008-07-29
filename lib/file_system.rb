@@ -1,5 +1,5 @@
 module FileSystem
-  MODELS = %w{Layout Snippet PartType Template Page}
+  MODELS = %w{Layout Snippet Page}
 
   class << self
     def activate

@@ -1,6 +1,6 @@
 module FileSystem::Model::PageExtensions
   IGNORED = %w{id lock_version draft_of parent_id layout_id
-               template_id created_by created_at updated_by updated_at}
+              created_by created_at updated_by updated_at}
   
   def self.included(base)   
     # Instance methods
@@ -82,10 +82,8 @@ module FileSystem::Model::PageExtensions
       attrs = YAML.load_file(yml_file)
       layout_name = attrs.delete('layout_name')
       layout = Layout.find_by_name(layout_name) if layout_name
-      template_name = attrs.delete('template_name')
-      template = Template.find_by_name(template_name) if template_name
       IGNORED.each {|a| attrs.delete a }
-      self.attributes = attrs.merge('_layout' => layout, 'template' => template).reject {|k,v| v.blank? }
+      self.attributes = attrs.merge('_layout' => layout).reject {|k,v| v.blank? }
     end
 
     def load_parts(files)
@@ -113,7 +111,6 @@ module FileSystem::Model::PageExtensions
       attr_fname = yaml_file(self.filename)
       attrs = self.attributes.dup
       IGNORED.each {|a| attrs.delete a}
-      attrs['template_name'] = self.template.name if self.template
       attrs['layout_name'] = self.layout.name if self.layout
       File.open(attr_fname, 'w') {|f| f.write YAML.dump(attrs) }
     end

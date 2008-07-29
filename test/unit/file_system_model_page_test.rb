@@ -127,13 +127,11 @@ class FileSystemModelPageTest < Test::Unit::TestCase
     @file_mock = mock()
     @layout_mock = mock()
     @yaml_mock = mock()
-    @attrs = {"title" => "My page", "slug" => "slug", "layout_id" => 1, 
-              "template_id" => nil}
+    @attrs = {"title" => "My page", "slug" => "slug", "layout_id" => 1}
     @page.expects(:filename).returns("slug")
     @page.expects(:yaml_file).returns("slug/slug.yaml")
     @page.expects(:attributes).returns(@attrs)
     @page.expects(:layout).at_least_once.returns(@layout_mock)
-    @page.expects(:template).at_least_once.returns(nil)
     @layout_mock.expects(:name).returns("My layout")
     File.expects(:open).with("slug/slug.yaml", 'w').yields(@file_mock)
     YAML.expects(:dump).with({"title" => "My page", "slug" => "slug", "layout_name" => "My layout"}).returns(@yaml_mock)

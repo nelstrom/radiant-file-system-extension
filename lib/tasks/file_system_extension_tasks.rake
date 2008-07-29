@@ -29,14 +29,14 @@ end
 
 namespace :file_system do
   desc 'Loads all content models from the filesystem.'
-  task :load => [:layouts, :snippets, :part_types, :templates, :pages].map {|m| "file_system:load:#{m}"}
+  task :load => [:layouts, :snippets, :pages].map {|m| "file_system:load:#{m}"}
   desc 'Destroys all content models in the database.'
-  task :wipe => [:layouts, :snippets, :part_types, :templates, :pages].map {|m| "file_system:wipe:#{m}"}
+  task :wipe => [:layouts, :snippets, :pages].map {|m| "file_system:wipe:#{m}"}
   desc 'Saves all content models to the filesystem.'
-  task :save => [:layouts, :snippets, :part_types, :templates, :pages].map {|m| "file_system:save:#{m}"}
+  task :save => [:layouts, :snippets, :pages].map {|m| "file_system:save:#{m}"}
   
   namespace :load do
-    [:layouts, :snippets, :part_types, :templates, :pages].each do |type|
+    [:layouts, :snippets, :pages].each do |type|
       desc "Loads all #{type} from the filesystem."
       task type => :environment do
         klass = type.to_s.singularize.classify.constantize
@@ -49,7 +49,7 @@ namespace :file_system do
   end
 
   namespace :wipe do
-    [:layouts, :snippets, :part_types, :templates, :pages].each do |type|
+    [:layouts, :snippets, :pages].each do |type|
       desc "Destroys all #{type} in the database."
       task type => :environment do
         klass = type.to_s.singularize.classify.constantize
@@ -59,7 +59,7 @@ namespace :file_system do
   end
   
   namespace :save do
-    [:layouts, :snippets, :part_types, :templates, :pages].each do |type|
+    [:layouts, :snippets, :pages].each do |type|
       desc "Saves all #{type} in the database to the filesystem."
       task type => :environment do
         klass = type.to_s.singularize.classify.constantize

@@ -3,13 +3,12 @@ require File.dirname(__FILE__) + '/../test_helper'
 class FileSystemExtensionTest < Test::Unit::TestCase
   
   def test_basic_module_inclusion
-    [Layout, Snippet, Template, Page].each do |model|
+    [Layout, Snippet, Page].each do |model|
       assert model.included_modules.include?(FileSystem::Model)
     end
   end
   
   def test_specialized_module_inclusion
-    assert Template.included_modules.include?(FileSystem::Model::TemplateExtensions)
     assert Page.included_modules.include?(FileSystem::Model::PageExtensions)
   end
   
