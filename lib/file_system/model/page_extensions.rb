@@ -83,7 +83,7 @@ module FileSystem::Model::PageExtensions
       layout_name = attrs.delete('layout_name')
       layout = Layout.find_by_name(layout_name) if layout_name
       IGNORED.each {|a| attrs.delete a }
-      self.attributes = attrs.merge('_layout' => layout).reject {|k,v| v.blank? }
+      self.attributes = attrs.merge('layout' => layout).reject {|k,v| v.blank? }
     end
 
     def load_parts(files)
