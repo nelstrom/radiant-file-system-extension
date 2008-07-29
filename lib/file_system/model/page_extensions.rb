@@ -1,5 +1,5 @@
 module FileSystem::Model::PageExtensions
-  IGNORED = %w{id lock_version draft_of parent_id layout_id
+  IGNORED = %w{id parent_id layout_id
               created_by created_at updated_by updated_at}
   
   def self.included(base)   
@@ -22,7 +22,7 @@ module FileSystem::Model::PageExtensions
   module ClassMethods
     def find_or_initialize_by_filename_with_dir_structure(filename)
       slug = File.basename(filename)
-      find_or_initialize_by_slug_and_parent_id_and_draft_of(slug, nil, nil)
+      find_or_initialize_by_slug_and_parent_id(slug, nil)
     end
     
     def load_files_with_dir_structure
