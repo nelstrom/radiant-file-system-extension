@@ -46,7 +46,7 @@ This saves the Layouts, Snippets, and Pages with Parts following this convention
 
 Each Page is represented by a directory whose name matches the page's slug. Within that directory, a yaml file (also named after the page slug) contains attributes of that page, such as the +title+, +breadcrumb+, +layout+ and so on. The page directory also includes a file for each Page Part associated with the Page.
 
-For Snippets and Page Parts, the file extension stands for the filter. So +header.textile+ will be passed through a Textile filter, whereas +footer.html+ will not be passed through any filter.
+For Snippets and Page Parts, the file extension stands for the filter. So <tt>header.textile</tt> will be passed through a Textile filter, whereas <tt>footer.html</tt> will not be passed through any filter.
 
 For Layouts, the file extension translates to the content type. The following is a list of recognised file extensions, and their corresponding content types:
 
