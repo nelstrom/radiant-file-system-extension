@@ -22,14 +22,20 @@ module FileSystem::Model::PageExtensions
   module ClassMethods
     def find_or_initialize_by_filename_with_dir_structure(filename)
       slug = File.basename(filename)
+      slug = "/" if slug == "pages"
+      puts "slug: #{slug}"
       find_or_initialize_by_slug_and_parent_id(slug, nil)
     end
     
     def load_files_with_dir_structure
-      paths.each do |p|
+      root_paths.each do |p|
         page = find_or_initialize_by_filename(p)
         page.load_file(p)
       end
+    end
+    
+    def root_paths(path = self.path)
+      Dir[path + "/"].select{|f| File.directory?(f)}
     end
     
     def paths(path = self.path)
@@ -59,8 +65,11 @@ module FileSystem::Model::PageExtensions
     def save_file_with_dir_structure(cascade=true)
       FileUtils.rm_rf(self.filename)
       FileUtils.mkdir_p(self.filename)
+      puts "Saving #{self.filename}"
       save_attributes
+      puts "  - attributes saved"
       save_parts
+      puts "  - parts saved"
       save_children if cascade
     end
     
@@ -90,7 +99,11 @@ module FileSystem::Model::PageExtensions
       files.each do |f|
         name, ext = $2, $3 if File.basename(f) =~ FileSystem::Model::FILENAME_REGEX
         filter_id = FileSystem::Model::FILTERS.include?(ext) ? ext.camelize : nil
-        self.parts << PagePart.new(:name => name, :filter_id => filter_id, :content => open(f).read)
+        if part = PagePart.find_by_name_and_page_id(name, self.id)
+          part.update_attributes(:filter_id => filter_id, :content => open(f).read)
+        else
+          self.parts << PagePart.new(:name => name, :filter_id => filter_id, :content => open(f).read)
+        end
       end
     end
     

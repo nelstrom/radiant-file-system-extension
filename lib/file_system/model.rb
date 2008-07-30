@@ -16,7 +16,8 @@ module FileSystem
 
     module ClassMethods
       def path
-        File.join(RAILS_ROOT, "design", class_of_active_record_descendant(self).name.pluralize.underscore)
+        File.join(RAILS_ROOT, "design",
+          class_of_active_record_descendant(self).name.pluralize.underscore)
       end
 
       def find_or_initialize_by_filename(filename)
