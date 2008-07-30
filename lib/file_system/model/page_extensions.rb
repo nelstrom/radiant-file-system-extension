@@ -53,7 +53,7 @@ module FileSystem::Model::PageExtensions
       puts "  - attributes loaded"
       load_parts(part_files(path))
       puts "  - parts loaded"
-      save!
+      save! rescue nil
       self.class.paths(path).each do |p|
         child = self.children.find_or_initialize_by_slug(File.basename(p))
         child.parent = self
