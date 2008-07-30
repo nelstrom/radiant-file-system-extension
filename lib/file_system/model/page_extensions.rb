@@ -23,7 +23,6 @@ module FileSystem::Model::PageExtensions
     def find_or_initialize_by_filename_with_dir_structure(filename)
       slug = File.basename(filename)
       slug = "/" if slug == "pages"
-      puts "slug: #{slug}"
       find_or_initialize_by_slug_and_parent_id(slug, nil)
     end
     
@@ -49,7 +48,7 @@ module FileSystem::Model::PageExtensions
 
   module InstanceMethods
     def load_file_with_dir_structure(path)
-      puts "Loading page from #{path.sub(self.class.path, '')}"
+      puts "Loading page from #{path.sub(/#{self.class.path}\/\/?/, '/')}"
       load_attributes(yaml_file(path))
       puts "  - attributes loaded"
       load_parts(part_files(path))
@@ -65,7 +64,7 @@ module FileSystem::Model::PageExtensions
     def save_file_with_dir_structure(cascade=true)
       FileUtils.rm_rf(self.filename)
       FileUtils.mkdir_p(self.filename)
-      puts "Saving #{self.filename}"
+      puts "Saving #{self.filename.sub(self.class.path, '')}"
       save_attributes
       puts "  - attributes saved"
       save_parts
