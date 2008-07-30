@@ -1,4 +1,6 @@
 require 'test/unit'
+require 'rubygems'
+require 'mocha'
 # # Load the environment
 unless defined? RADIANT_ROOT
   ENV["RAILS_ENV"] = "test"

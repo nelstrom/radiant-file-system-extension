@@ -84,6 +84,7 @@ class FileSystemModelPageTest < Test::Unit::TestCase
   end
   
   def test_should_have_filename_based_on_page_hierarchy
+    assert_equal "#{RAILS_ROOT}/design/pages/", pages(:homepage).filename
     assert_equal "#{RAILS_ROOT}/design/pages/documentation/books", pages(:books).filename
   end
   
