@@ -1,0 +1,67 @@
+= File System
+
+Provides rake tasks for saving Pages, Snippets and Layouts from the database to the file system, and loading them back into the DB again. 
+
+This opens up the possibility of placing a Radiant site under version control. It also allows you to edit a site using a text editor, rather than going through the Radiant admin in your browser.
+
+== Installation
+
+This extension is hosted on github. If you have git installed, then `cd` to the root of your radiant project and issue this command:
+
+  git clone git://github.com/nelstrom/radiant-file-system-extension.git vendor/extensions/file_system
+
+If you don’t have git, then you can instead download the tarball from this URL:
+
+  http://github.com/nelstrom/radiant-file-system-extension/tarball/master
+
+and expand the contents to `your-radiant-project/vendor/extensions/file_system`.
+
+== Usage
+
+=== Save
+
+To save your site to the file system, run the following command:
+
+  rake file_system:save
+
+This saves the Layouts, Snippets, and Pages with Parts following this convention:
+
+  design
+  \_ layouts
+     \_ Normal.html
+     \_ Stylesheet.css
+     \_ XML Feed.html
+  \_ pages
+     \_ about
+        \_ about.yaml
+        \_ body.textile
+        \_ sidebar.textile
+     \_ body.html
+     \_ pages.yaml
+     \_ sidebar.markdown
+     ...
+  \_ snippets
+     \_ footer.html
+     \_ header.textile
+
+Each Page is represented by a directory whose name matches the page's slug. Within that directory, a yaml file (also named after the page slug) contains attributes of that page, such as the +title+, +breadcrumb+, +layout+ and so on. The page directory also includes a file for each Page Part associated with the Page.
+
+For Snippets and Page Parts, the file extension stands for the filter. So +header.textile+ will be passed through a Textile filter, whereas +footer.html+ will not be passed through any filter.
+
+For Layouts, the file extension translates to the content type. The following is a list of recognised file extensions, and their corresponding content types:
+
+  .html  =>  "text/html"
+  .css   =>  "text/css"
+  .xml   =>  "application/xml"
+  .rss   =>  "application/rss+xml"
+  .txt   =>  "text/plain"
+  .js    =>  "text/javascript"
+  .yaml  =>  "text/x-yaml"
+
+=== Load
+
+To load your site from the file system back into the database, run the following command:
+
+  rake file_system:load
+
+Any changes you have made to the files since saving them to the file system will now be transferred into the database.
