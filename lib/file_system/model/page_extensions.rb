@@ -1,5 +1,5 @@
 module FileSystem::Model::PageExtensions
-  IGNORED = %w{id parent_id layout_id
+  IGNORED = %w{id parent_id layout_id lock_version
               created_by created_at updated_by updated_at}
   
   def self.included(base)   
@@ -53,7 +53,7 @@ module FileSystem::Model::PageExtensions
       puts "  - attributes loaded"
       load_parts(part_files(path))
       puts "  - parts loaded"
-      save! rescue nil
+      save!
       self.class.paths(path).each do |p|
         child = self.children.find_or_initialize_by_slug(File.basename(p))
         child.parent = self
