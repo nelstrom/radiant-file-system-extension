@@ -91,7 +91,7 @@ class FileSystemModelPageTest < Test::Unit::TestCase
   def test_should_save_file_as_attributes_parts_and_children_separately
     @page.stubs(:filename).returns("blah")
     FileUtils.expects(:mkdir_p).with("blah").returns(true)
-    FileUtils.expects(:rm_rf).with("blah").returns(true)
+    # FileUtils.expects(:rm).with("blah").returns(true)
     @page.expects(:save_attributes).returns(true)
     @page.expects(:save_parts).returns(true)
     @page.expects(:save_children).returns(true)

@@ -62,8 +62,14 @@ module FileSystem::Model::PageExtensions
     end 
     
     def save_file_with_dir_structure(cascade=true)
-      FileUtils.rm_rf(self.filename)
-      FileUtils.mkdir_p(self.filename)
+      if Dir.glob(self.filename).empty?
+        # no directory exists for this page, so make one
+        FileUtils.mkdir_p(self.filename)
+      else
+        # a dir already exists for this page, so find its files and delete them
+        files = Dir.glob("#{self.filename}/*.*").select{|child| File.file?(child) }
+        FileUtils.rm(files)
+      end
       puts "Saving #{self.filename.sub(self.class.path, '')}"
       save_attributes
       puts "  - attributes saved"
