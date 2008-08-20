@@ -30,8 +30,8 @@ module FileSystem
         find_by_id(id) || find_by_name(name) || new
       end
       
-      def find_existing_records
-        klass_name.constantize.find(:all, :select => "id,name")
+      def records_on_database
+        klass_name.constantize.find(:all)
       end
       
       def delete_record(record)
@@ -39,21 +39,16 @@ module FileSystem
       end
 
       def load_files
-        existing_records = find_existing_records
-        puts "records: #{existing_records}"
+        records_on_filesystem = []
         Dir[path + "/**"].each do |file|
           record = find_or_initialize_by_filename(file)
           puts "Loading #{self.name.downcase} from #{File.basename(file)}."
           record.load_file(file)
           record.save
-          existing_records.delete(record)
+          records_on_filesystem << record
         end
-        # anything remaining in the existing_records array has no corresponding file
-        # (but exists in DB), so we'll delete it.
-        existing_records.each do |item|
-          delete_record(item)
-        end
-        puts "records: #{existing_records}"
+        fileless_db_records = records_on_database - records_on_filesystem
+        fileless_db_records.each { |item| delete_record(item) }
       end
 
       def save_files
