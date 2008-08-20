@@ -15,9 +15,13 @@ module FileSystem
     end
 
     module ClassMethods
+      def klass_name
+        @klass_name ||= class_of_active_record_descendant(self).name
+      end
+      
       def path
         File.join(RAILS_ROOT, "design",
-          class_of_active_record_descendant(self).name.pluralize.underscore)
+          klass_name.pluralize.underscore)
       end
 
       def find_or_initialize_by_filename(filename)
@@ -25,14 +29,31 @@ module FileSystem
         name = extract_name(filename)
         find_by_id(id) || find_by_name(name) || new
       end
+      
+      def find_existing_records
+        klass_name.constantize.find(:all, :select => "id,name")
+      end
+      
+      def delete_record(record)
+        klass_name.constantize.destroy(record)
+      end
 
       def load_files
+        existing_records = find_existing_records
+        puts "records: #{existing_records}"
         Dir[path + "/**"].each do |file|
           record = find_or_initialize_by_filename(file)
           puts "Loading #{self.name.downcase} from #{File.basename(file)}."
           record.load_file(file)
           record.save
+          existing_records.delete(record)
         end
+        # anything remaining in the existing_records array has no corresponding file
+        # (but exists in DB), so we'll delete it.
+        existing_records.each do |item|
+          delete_record(item)
+        end
+        puts "records: #{existing_records}"
       end
 
       def save_files
