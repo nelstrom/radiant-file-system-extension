@@ -26,11 +26,39 @@ module FileSystem::Model::PageExtensions
       find_or_initialize_by_slug_and_parent_id(slug, nil)
     end
     
+    @@pages_on_filesystem = []
+    @@page_parts_on_filesystem = []
+    
+    def register_page_on_filesystem(page)
+      @@pages_on_filesystem << page
+    end
+    
+    def register_page_part_on_filesystem(page_part)
+      @@page_parts_on_filesystem << page_part
+    end
+    
+    def pages_on_database
+      Page.find(:all)
+    end
+    
+    def page_parts_on_database
+      PagePart.find(:all)
+    end
+    
+    def delete_fileless_records_from_db
+      fileless_page_parts = page_parts_on_database - @@page_parts_on_filesystem
+      fileless_page_parts.each { |part| PagePart.destroy(part) }
+      
+      fileless_pages = pages_on_database - @@pages_on_filesystem
+      fileless_pages.each { |page| Page.destroy(page) }
+    end
+    
     def load_files_with_dir_structure
       root_paths.each do |p|
         page = find_or_initialize_by_filename(p)
         page.load_file(p)
       end
+      delete_fileless_records_from_db
     end
     
     def root_paths(path = self.path)
@@ -54,6 +82,7 @@ module FileSystem::Model::PageExtensions
       load_parts(part_files(path))
       puts "  - parts loaded"
       save!
+      self.class.register_page_on_filesystem(self)
       self.class.paths(path).each do |p|
         child = self.children.find_or_initialize_by_slug(File.basename(p))
         child.parent = self
@@ -97,7 +126,12 @@ module FileSystem::Model::PageExtensions
       layout_name = attrs.delete('layout_name')
       layout = Layout.find_by_name(layout_name) if layout_name
       IGNORED.each {|a| attrs.delete a }
-      self.attributes = attrs.merge('layout' => layout).reject {|k,v| v.blank? }
+      attrs = attrs.reject {|k,v| v.blank? }
+      if layout_name =~ /<inherit>/
+        self.attributes = attrs.merge('layout_id' => nil)
+      else
+        self.attributes = attrs.merge('layout' => layout)
+      end
     end
 
     def load_parts(files)
@@ -107,8 +141,10 @@ module FileSystem::Model::PageExtensions
         if part = PagePart.find_by_name_and_page_id(name, self.id)
           part.update_attributes(:filter_id => filter_id, :content => open(f).read)
         else
-          self.parts << PagePart.new(:name => name, :filter_id => filter_id, :content => open(f).read)
+          part = PagePart.new(:name => name, :filter_id => filter_id, :content => open(f).read)
+          self.parts << part
         end
+        self.class.register_page_part_on_filesystem(part)
       end
     end
     
@@ -129,8 +165,12 @@ module FileSystem::Model::PageExtensions
       attr_fname = yaml_file(self.filename)
       attrs = self.attributes.dup
       IGNORED.each {|a| attrs.delete a}
-      attrs['layout_name'] = self.layout.name if self.layout
+      attrs['layout_name'] = layout_name_or_inherit if self.layout
       File.open(attr_fname, 'w') {|f| f.write YAML.dump(attrs) }
+    end
+    
+    def layout_name_or_inherit
+      self.layout_id ? self.layout.name : "<inherit> [#{self.layout.name}]"
     end
   end
 end
