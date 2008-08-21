@@ -1,0 +1,8 @@
+Behavioural changes:
+✓ make it play with subversion (don't delete .svn folders on each save!)
+✓ If a file is deleted from the filesystem, the corresponding item should be deleted from the database
+✓ For pages with layout_id = nil (i.e. inheriting layout from parent), leave layout attribute blank (or <inherit> [layout_name] for info).
+
+Make configurable:
+- list of FILTERS (ability to add e.g. sass)
+- list of CONTENT_TYPES
