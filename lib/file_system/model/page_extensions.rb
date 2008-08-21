@@ -126,7 +126,12 @@ module FileSystem::Model::PageExtensions
       layout_name = attrs.delete('layout_name')
       layout = Layout.find_by_name(layout_name) if layout_name
       IGNORED.each {|a| attrs.delete a }
-      self.attributes = attrs.merge('layout' => layout).reject {|k,v| v.blank? }
+      attrs = attrs.reject {|k,v| v.blank? }
+      if layout_name =~ /<inherit>/
+        self.attributes = attrs.merge('layout_id' => nil)
+      else
+        self.attributes = attrs.merge('layout' => layout)
+      end
     end
 
     def load_parts(files)
@@ -160,8 +165,12 @@ module FileSystem::Model::PageExtensions
       attr_fname = yaml_file(self.filename)
       attrs = self.attributes.dup
       IGNORED.each {|a| attrs.delete a}
-      attrs['layout_name'] = self.layout.name if self.layout
+      attrs['layout_name'] = layout_name_or_inherit if self.layout
       File.open(attr_fname, 'w') {|f| f.write YAML.dump(attrs) }
+    end
+    
+    def layout_name_or_inherit
+      self.layout_id ? self.layout.name : "<inherit> [#{self.layout.name}]"
     end
   end
 end
