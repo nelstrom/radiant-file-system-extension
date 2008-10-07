@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + "/../test_helper"
 
-class FileSystemModelPageTest < Test::Unit::TestCase
+class FileSystemModelPageTest < ActiveSupport::TestCase
   fixtures :pages, :page_parts
   test_helper :page, :difference
   
@@ -132,6 +132,7 @@ class FileSystemModelPageTest < Test::Unit::TestCase
     @page.expects(:filename).returns("slug")
     @page.expects(:yaml_file).returns("slug/slug.yaml")
     @page.expects(:attributes).returns(@attrs)
+    @page.expects(:layout_id).returns(1)
     @page.expects(:layout).at_least_once.returns(@layout_mock)
     @layout_mock.expects(:name).returns("My layout")
     File.expects(:open).with("slug/slug.yaml", 'w').yields(@file_mock)

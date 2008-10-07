@@ -15,6 +15,7 @@ class Test::Unit::TestCase
   
   # Add the fixture directory to the fixture path
   self.fixture_path << File.dirname(__FILE__) + "/fixtures"
+  self.fixture_path << File.expand_path(File.dirname(__FILE__) + '/../../../../test/fixtures')
   
   # Add more helper methods to be used by all extension tests here...
   
