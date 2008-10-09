@@ -35,7 +35,7 @@ module FileSystem
       end
       
       def delete_record(record)
-        klass_name.constantize.destroy(record)
+        klass_name.constantize.destroy(record.id)
       end
 
       def load_files

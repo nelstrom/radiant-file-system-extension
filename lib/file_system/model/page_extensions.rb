@@ -47,10 +47,10 @@ module FileSystem::Model::PageExtensions
     
     def delete_fileless_records_from_db
       fileless_page_parts = page_parts_on_database - @@page_parts_on_filesystem
-      fileless_page_parts.each { |part| PagePart.destroy(part) }
+      fileless_page_parts.each { |part| PagePart.destroy(part.id) }
       
       fileless_pages = pages_on_database - @@pages_on_filesystem
-      fileless_pages.each { |page| Page.destroy(page) }
+      fileless_pages.each { |page| Page.destroy(page.id) }
     end
     
     def load_files_with_dir_structure
