@@ -47,7 +47,7 @@ module FileSystem::Model::PageExtensions
     
     def delete_fileless_records_from_db
       fileless_page_parts = page_parts_on_database - @@page_parts_on_filesystem
-      fileless_page_parts.each { |part| page.destroy }
+      fileless_page_parts.each { |part| part.destroy }
       
       fileless_pages = pages_on_database - @@pages_on_filesystem
       fileless_pages.each { |page| page.destroy }
