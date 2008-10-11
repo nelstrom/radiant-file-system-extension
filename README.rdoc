@@ -26,7 +26,7 @@ By default, the file_system extension is aware of the filters which come bundled
 
 To save your site to the file system, run the following command:
 
-  rake file_system:save
+  rake file_system:to_files
 
 This saves the Layouts, Snippets, and Pages with Parts following this convention:
 
@@ -66,6 +66,6 @@ For Layouts, the file extension translates to the content type. The following is
 
 To load your site from the file system back into the database, run the following command:
 
-  rake file_system:load
+  rake file_system:to_db
 
 Any changes you have made to the files since saving them to the file system will now be transferred into the database.
