@@ -6,3 +6,8 @@ Behavioural changes:
 Make configurable:
 - list of FILTERS (ability to add e.g. sass)
 - list of CONTENT_TYPES
+
+bugs:
+- two layouts with similar names can confuse issues: 
+  sitemap -> sitemap.html
+  sitemap.xml -> sitemap.xml.html
