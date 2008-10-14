@@ -174,7 +174,11 @@ module FileSystem::Model::PageExtensions
     end
     
     def layout_content_type
-      FileSystem::Model::CONTENT_TYPES.invert[self.layout.content_type] || 'html'
+      if self.layout
+        FileSystem::Model::CONTENT_TYPES.invert[self.layout.content_type] || 'html'
+      else
+        'html'
+      end
     end
   end
 end
