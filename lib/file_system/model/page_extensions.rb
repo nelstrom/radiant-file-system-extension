@@ -155,7 +155,7 @@ module FileSystem::Model::PageExtensions
     def save_parts
       self.parts.each do |part|
         part_bname = part.name
-        part_ext = part.filter_id.blank? ? "html" : part.filter_id.downcase
+        part_ext = part.filter_id.blank? ? layout_content_type : part.filter_id.downcase
         part_fname = File.join(self.filename, [part_bname, part_ext].join("."))
         File.open(part_fname, 'w') {|f| f.write part.content }
       end
@@ -171,6 +171,10 @@ module FileSystem::Model::PageExtensions
     
     def layout_name_or_inherit
       self.layout_id ? self.layout.name : "<inherit> [#{self.layout.name}]"
+    end
+    
+    def layout_content_type
+      CONTENT_TYPES.invert[self.layout.content_type] || 'html'
     end
   end
 end
