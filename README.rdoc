@@ -16,10 +16,6 @@ If you don’t have git, then you can instead download the tarball from this URL
 
 and expand the contents to `your-radiant-project/vendor/extensions/file_system`.
 
-By default, the file_system extension is aware of the filters which come bundled with Radiant: textile, markdown and smarty pants. If you have installed any extensions which enable additional filters, you will have to tell the file_system extension about them. For the time being, the simplest way to do this is to open the file <tt>file_system/lib/file_system/model.rb</tt>, and add your additional filters to the +FILTERS+ array. For example, if you have the +sass+ extension installed, you would change the array to the following:
-
-  FILTERS = %w{textile markdown smarty_pants sass}
-
 == Usage
 
 === Save

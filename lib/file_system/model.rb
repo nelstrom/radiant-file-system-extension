@@ -8,7 +8,7 @@ module FileSystem
                      "txt" => "text/plain",
                      "js" => "text/javascript",
                      "yaml" => "text/x-yaml"}
-    FILTERS = %w{textile markdown smarty_pants}
+    FILTERS = TextFilter.descendants.map { |f| f.filter_name.underscore }.sort
 
     def self.included(base)
       base.extend ClassMethods

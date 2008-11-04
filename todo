@@ -8,8 +8,15 @@ Behavioural changes:
 ✓ If a file is deleted from the filesystem, the corresponding item should be deleted from the database
 ✓ For pages with layout_id = nil (i.e. inheriting layout from parent), leave layout attribute blank (or <inherit> [layout_name] for info).
 
+rake tasks:
+✓ file_system:save -> file_system:to_files
+  - file_system:to_files -> db:to_fs
+✓ file_system:load -> file_system:to_db
+  - file_system:to_db -> fs:to_db
+
 Make configurable:
-- list of FILTERS (ability to add e.g. sass)
+✓ list of FILTERS (ability to add e.g. sass)
+  ✓ make list of FILTERS auto-detect filters
 - list of CONTENT_TYPES
 
 bugs:
