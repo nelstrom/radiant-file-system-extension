@@ -58,7 +58,7 @@ module FileSystem::Model::PageExtensions
         page = find_or_initialize_by_filename(p)
         page.load_file(p)
       end
-      delete_fileless_records_from_db
+      delete_fileless_records_from_db unless root_paths.blank?
     end
     
     def root_paths(path = self.path)

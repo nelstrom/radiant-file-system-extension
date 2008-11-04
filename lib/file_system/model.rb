@@ -39,16 +39,19 @@ module FileSystem
       end
 
       def load_files
-        records_on_filesystem = []
-        Dir[path + "/**"].each do |file|
-          record = find_or_initialize_by_filename(file)
-          puts "Loading #{self.name.downcase} from #{File.basename(file)}."
-          record.load_file(file)
-          record.save
-          records_on_filesystem << record
+        files = Dir[path + "/**"]
+        unless files.blank?
+          records_on_filesystem = []
+          files.each do |file|
+            record = find_or_initialize_by_filename(file)
+            puts "Loading #{self.name.downcase} from #{File.basename(file)}."
+            record.load_file(file)
+            record.save
+            records_on_filesystem << record
+          end
+          fileless_db_records = records_on_database - records_on_filesystem
+          fileless_db_records.each { |item| delete_record(item) }
         end
-        fileless_db_records = records_on_database - records_on_filesystem
-        fileless_db_records.each { |item| delete_record(item) }
       end
 
       def save_files

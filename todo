@@ -1,4 +1,9 @@
 Behavioural changes:
+✓ Do not delete all records from database where the file system does not even have a folder corresponding to that model 
+  (e.g. rake file_system:to_files:layouts only saves layouts to file_system
+  subsequently running file_system:to_db should load layouts from fs to db, 
+  deleting any layouts from db which have been deleted on file system,
+  but leaving all pages and snippets in DB intact!)
 ✓ make it play with subversion (don't delete .svn folders on each save!)
 ✓ If a file is deleted from the filesystem, the corresponding item should be deleted from the database
 ✓ For pages with layout_id = nil (i.e. inheriting layout from parent), leave layout attribute blank (or <inherit> [layout_name] for info).
