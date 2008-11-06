@@ -137,7 +137,7 @@ module FileSystem::Model::PageExtensions
     def load_parts(files)
       files.each do |f|
         name, ext = $2, $3 if File.basename(f) =~ FileSystem::Model::FILENAME_REGEX
-        filter_id = FileSystem::Model::FILTERS.include?(ext) ? ext.camelize : nil
+        filter_id = filters.include?(ext) ? ext.camelize : nil
         if part = PagePart.find_by_name_and_page_id(name, self.id)
           part.update_attributes(:filter_id => filter_id, :content => open(f).read)
         else

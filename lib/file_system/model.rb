@@ -8,7 +8,6 @@ module FileSystem
                      "txt" => "text/plain",
                      "js" => "text/javascript",
                      "yaml" => "text/x-yaml"}
-    FILTERS = TextFilter.descendants.map { |f| f.filter_name.underscore }.sort
 
     def self.included(base)
       base.extend ClassMethods
@@ -76,7 +75,7 @@ module FileSystem
       self.content = content
       self.content_type = CONTENT_TYPES[type_or_filter] if respond_to?(:content_type)
       if respond_to?(:filter_id) 
-        self.filter_id = FILTERS.include?(type_or_filter) ? type_or_filter.camelize : nil
+        self.filter_id = filters.include?(type_or_filter) ? type_or_filter.camelize : nil
       end
     end
     
@@ -98,6 +97,12 @@ module FileSystem
         end
         output << File.join(self.class.path, [basename, extension].join("."))
       end
-    end      
+    end
+
+    private
+    def filters
+      @filters ||= TextFilter.descendants.map { |f| f.filter_name.underscore }.sort
+    end
+
   end
 end
