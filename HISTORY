@@ -1,0 +1,3 @@
+0.2 Removed the requirement to add non-standard filters (e.g. sass) manually. The list of filters is now generated dynamically.
+
+0.1 First working release. Adapted from Sean Cribbs original file_system extension.

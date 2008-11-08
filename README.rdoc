@@ -65,3 +65,7 @@ To load your site from the file system back into the database, run the following
   rake file_system:to_db
 
 Any changes you have made to the files since saving them to the file system will now be transferred into the database.
+
+= Credits
+
+The file_system extension was originally conceived and designed by Sean Cribbs. It is now maintained by Andrew Neil. Contributions have been made by Jim Gay and Brian Landau.
