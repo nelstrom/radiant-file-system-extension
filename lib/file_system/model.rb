@@ -89,11 +89,11 @@ module FileSystem
         basename = self.name
         extension = case 
           when respond_to?(:filter_id)
-            self.filter_id.blank? ? "html" : self.filter_id.downcase
+            self.filter_id.blank? ? default_content_type : self.filter_id.downcase
           when respond_to?(:content_type)
-            CONTENT_TYPES.invert[self.content_type] || "html"
+            CONTENT_TYPES.invert[self.content_type] || default_content_type
           else
-            "html"
+            default_content_type
         end
         output << File.join(self.class.path, [basename, extension].join("."))
       end
@@ -102,6 +102,9 @@ module FileSystem
     private
     def filters
       @filters ||= TextFilter.descendants.map { |f| f.filter_name.underscore }.sort
+    end
+    def default_content_type
+      "html"
     end
 
   end
