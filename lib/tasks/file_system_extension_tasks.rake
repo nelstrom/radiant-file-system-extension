@@ -1,8 +1,8 @@
 namespace :file_system do
   
   def file_system_models
-    # FileSystem::MODELS
-    [:layouts, :snippets, :pages]
+    require "#{RAILS_ROOT}/config/environment"
+    FileSystem::MODELS.map{ |model| model.to_s.tableize.symbolize }
   end
   
   desc 'Loads all content models from the filesystem.'
