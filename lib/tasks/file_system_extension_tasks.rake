@@ -20,7 +20,7 @@ namespace :file_system do
         if ENV['CLEAR'] == 'true' || ENV['WIPE'] == 'true'
           Rake::Task["file_system:wipe:#{type}"].invoke
         end
-        klass.load_files
+        klass.load_files if klass.respond_to?(:load_files)
       end
     end
   end
@@ -40,7 +40,7 @@ namespace :file_system do
       desc "Saves all #{type} in the database to the filesystem."
       task type => :environment do
         klass = type.to_s.singularize.classify.constantize
-        klass.save_files
+        klass.save_files if klass.respond_to?(:save_files)
       end
     end
   end

@@ -16,6 +16,10 @@ If you don’t have git, then you can instead download the tarball from this URL
 
 and expand the contents to `your-radiant-project/vendor/extensions/file_system`.
 
+It is important that the file_system extension loads after all of your other extensions. Open your `config/environment.rb` file, and search for `config.extensions`. Make sure that it is not commented out, then edit it to read:
+
+  config.extensions = [ :all, :file_system ]
+
 == Usage
 
 === Save
