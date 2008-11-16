@@ -43,7 +43,7 @@ module FileSystem
           records_on_filesystem = []
           files.each do |file|
             record = find_or_initialize_by_filename(file)
-            puts "Loading #{self.name.downcase} from #{File.basename(file)}."
+            puts "Loading #{self.name.downcase} from #{File.basename(file)}"
             record.load_file(file)
             record.save
             records_on_filesystem << record
