@@ -56,10 +56,22 @@ describe FileSystem::Model do
       @file_mock.should_receive(:read).and_return("Content stored in a file")
     end
     
+    # it "should have original filename" do
+    #   @model.name.should == "Original name"
+    # end
     it "should set model name from filename" do
       @model.should_receive(:open).with("005_new_name").and_return(@file_mock)
       @model.load_file("005_new_name")
       @model.name.should == "new_name"
+    end
+    
+    # it "should have original content" do
+    #   @model.content.should == "Original content in the database"
+    # end
+    it "should set content from the file contents" do
+      @model.should_receive(:open).with("005_new_name").and_return(@file_mock)
+      @model.load_file("005_new_name")
+      @model.content.should == "Content stored in a file"
     end
     
     it "should set content type from file content_type" do
@@ -102,6 +114,12 @@ describe FileSystem::Model do
       @model.filter_id.should be_nil
     end
     
+  end
+  
+  describe "save_file" do
+    it "should description" do
+      
+    end
   end
   
 end
