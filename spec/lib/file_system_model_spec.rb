@@ -116,9 +116,96 @@ describe FileSystem::Model do
     
   end
   
+  describe "filename" do
+    before(:each) do
+      class << @model
+        attr_accessor :name
+      end
+      @model.name = "example_name"
+    end
+    it "should use name with default extension" do
+      @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.html"
+    end
+    it "should use filter as extension" do
+      class << @model
+        attr_accessor :filter_id
+      end
+      @model.filter_id = "Textile"
+      @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.textile"
+    end
+  end
+  
   describe "save_file" do
-    it "should description" do
-      
+    before(:each) do
+      class << @model
+        attr_accessor :content, :name
+      end
+      @model.content = "Existing model content"
+      @model.name = "example_model"
+      @file_mock = mock("file_mock")
+    end
+    
+    it "should save file" do
+      File.should_receive(:open).
+        with("#{RAILS_ROOT}/design/mock_models/example_model.html", 'w').
+        and_yield(@file_mock)
+      @file_mock.should_receive(:write).with("Existing model content")
+      @model.save_file
+    end
+    
+    it "should save file with filter" do
+      class << @model
+        attr_accessor :filter_id
+      end
+      @model.filter_id = "Textile"
+      File.should_receive(:open).
+        with("#{RAILS_ROOT}/design/mock_models/example_model.textile", 'w').
+        and_yield(@file_mock)
+      @file_mock.should_receive(:write).with("Existing model content")
+      @model.save_file
+    end
+    
+    it "should save file with content_type" do
+      class << @model
+        attr_accessor :content_type
+      end
+      @model.content_type = "text/css"
+      File.should_receive(:open).
+        with("#{RAILS_ROOT}/design/mock_models/example_model.css", 'w').
+        and_yield(@file_mock)
+      @file_mock.should_receive(:write).with("Existing model content")
+      @model.save_file
+    end
+    
+  end
+  
+  describe "allowed filenames" do
+    ['001_some_name',
+    '001_some-name',
+    '002_name_with.ext',
+    '002_name-with.ext',
+    '003_name_with.ext-dash',
+    '003_name-with.ext-dash',
+    'some_name',
+    'some-name',
+    'name_with.ext',
+    'name-with.ext',
+    'name_with.ext-dash',
+    'name-with.ext-dash',
+    'File with spaces.html',
+    %{\!\@\#\$\%\^\&\*\(\)\[\]\{\}\|\=\-\_\+\/\*\'\"\;\:\,\<\>\`\~.html}
+    ].each do |filename|
+      it "should include #{filename}" do
+        filename.should match(FileSystem::Model::FILENAME_REGEX)
+      end
+    end
+  end
+  
+  describe "disallowed filenames" do
+    [].each do |filename|
+      it "should include #{filename}" do
+        filename.should_not match(FileSystem::Model::FILENAME_REGEX)
+      end
     end
   end
   
