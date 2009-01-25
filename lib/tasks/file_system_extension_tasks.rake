@@ -2,7 +2,7 @@ namespace :file_system do
   
   def file_system_models
     require "#{RAILS_ROOT}/config/environment"
-    FileSystem::MODELS.map{ |model| model.to_s.tableize.symbolize }
+    @file_system_models ||= FileSystem::MODELS.map{ |model| model.to_s.tableize.symbolize }
   end
   
   desc 'Loads all content models from the filesystem.'
@@ -45,6 +45,30 @@ namespace :file_system do
     end
   end
 end
+
+namespace :db do
+  desc "Alias for file_system:to_files"
+  task :to_fs => ["file_system:to_files"]
+  
+  namespace :to_fs do
+    file_system_models.each do |type|
+      task type => ["file_system:to_files:#{type}"]
+    end
+  end
+end
+
+
+namespace :fs do
+  desc "Alias for file_system:to_db"
+  task :to_db => ["file_system:to_db"]
+  
+  namespace :to_db do
+    file_system_models.each do |type|
+      task type => "file_system:to_db:#{type}"
+    end
+  end
+end
+
 
 namespace :cache do
   desc "Clear all files and directories in ./cache"
