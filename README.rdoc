@@ -68,7 +68,16 @@ To load your site from the file system back into the database, run the following
 
   rake file_system:to_db
 
-Any changes you have made to the files since saving them to the file system will now be transferred into the database.
+Any changes you have made to the files since saving them to the file system will now be transferred into the database. When running this command, the cache is also cleared, so that your changes will be visible immediately.
+
+=== Shortcuts
+
+The following commands have aliases:
+
+  rake file_system:to_files     rake db:to_fs
+  rake file_system:to_db        rake fs:to_db
+
+Also, note that this extension provides a rake task for clearing the cache: <tt>rake cache:clear</tt>.
 
 = Credits
 
