@@ -45,3 +45,10 @@ namespace :file_system do
     end
   end
 end
+
+namespace :cache do
+  desc "Clear all files and directories in ./cache"
+  task :clear do
+    `rm -Rf cache/*`
+  end
+end
