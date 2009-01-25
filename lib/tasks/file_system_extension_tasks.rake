@@ -15,7 +15,7 @@ namespace :file_system do
   namespace :to_db do
     file_system_models.each do |type|
       desc "Loads all #{type} from the filesystem."
-      task type => :environment do
+      task type => [:environment, "cache:clear"] do
         klass = type.to_s.singularize.classify.constantize
         if ENV['CLEAR'] == 'true' || ENV['WIPE'] == 'true'
           Rake::Task["file_system:wipe:#{type}"].invoke
