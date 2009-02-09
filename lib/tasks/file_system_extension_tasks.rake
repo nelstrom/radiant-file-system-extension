@@ -73,6 +73,8 @@ end
 namespace :cache do
   desc "Clear all files and directories in ./cache"
   task :clear do
+    # todo: don't assume cache is in ./cache
+    # fetch from @controller.page_cache_directory
     `rm -Rf cache/*`
   end
 end
