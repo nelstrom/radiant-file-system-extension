@@ -7,7 +7,8 @@ module FileSystem
                      "rss" => "application/rss+xml",
                      "txt" => "text/plain",
                      "js" => "text/javascript",
-                     "yaml" => "text/x-yaml"}
+                     "yaml" => "text/x-yaml",
+                     "atom" => "application/atom+xml"}
 
     def self.included(base)
       base.extend ClassMethods
