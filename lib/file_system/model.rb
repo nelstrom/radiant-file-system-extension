@@ -12,10 +12,6 @@ module FileSystem
 
     # The tiny_paper extension adds the filter "Rich Text Editor"
     FILTER_EXTENSION_MAP = { "Rich Text Editor" => "tinymce.html" }
-    EXTENSION_FILTER_MAP = FILTER_EXTENSION_MAP.invert
-    #EXTENSION_FILTER_MAP = {
-      #"tinymce" => "Rich Text Editor"
-    #}
 
     def self.included(base)
       base.extend ClassMethods

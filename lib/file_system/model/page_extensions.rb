@@ -181,21 +181,13 @@ module FileSystem::Model::PageExtensions
       end
     end
     def extension_from_filter(part)
-      if FileSystem::Model::FILTER_EXTENSION_MAP.has_key?(part.filter_id)
-        FileSystem::Model::FILTER_EXTENSION_MAP[part.filter_id]
-      else
-        part.filter_id.downcase
-      end
+      FileSystem::Model::FILTER_EXTENSION_MAP[part.filter_id] || part.filter_id.downcase
     end
     def filter_from_extension(extension)
       if filters.include?(extension)
-        return extension.camelize
+        extension.camelize
       else
-        if FileSystem::Model::EXTENSION_FILTER_MAP.has_key?(extension)
-          return FileSystem::Model::EXTENSION_FILTER_MAP[extension]
-        else
-          nil
-        end
+        FileSystem::Model::FILTER_EXTENSION_MAP.invert[extension]
       end
     end
   end
