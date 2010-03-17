@@ -180,15 +180,5 @@ module FileSystem::Model::PageExtensions
         'html'
       end
     end
-    def extension_from_filter(part)
-      FileSystem::Model::FILTER_EXTENSION_MAP[part.filter_id] || part.filter_id.downcase
-    end
-    def filter_from_extension(extension)
-      if filters.include?(extension)
-        extension.camelize
-      else
-        FileSystem::Model::FILTER_EXTENSION_MAP.invert[extension]
-      end
-    end
   end
 end

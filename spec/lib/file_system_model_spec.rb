@@ -114,24 +114,43 @@ describe FileSystem::Model do
       @model.filter_id.should be_nil
     end
     
-  end
-  
-  describe "filename" do
-    before(:each) do
-      class << @model
-        attr_accessor :name
-      end
-      @model.name = "example_name"
-    end
-    it "should use name with default extension" do
-      @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.html"
-    end
-    it "should use filter as extension" do
+    it "should map filter_id from FILTER_EXTENSION_MAP" do
       class << @model
         attr_accessor :filter_id
       end
       @model.filter_id = "Textile"
-      @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.textile"
+      @model.should_receive(:open).with("005_new_name.tinymce.html").and_return(@file_mock)
+      @model.load_file("005_new_name.tinymce.html")
+      @model.filter_id.should == "Rich Text Editor"
+    end
+    
+  end
+  
+  describe "filename" do
+    describe "extension" do
+      before(:each) do
+        class << @model
+          attr_accessor :name
+        end
+        @model.name = "example_name"
+      end
+      it "should use default when filter is nil" do
+        @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.html"
+      end
+      it "should use filter, downcased" do
+        class << @model
+          attr_accessor :filter_id
+        end
+        @model.filter_id = "Textile"
+        @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.textile"
+      end
+      it "should be derived from FILTER_EXTENSION_MAP" do
+        class << @model
+          attr_accessor :filter_id
+        end
+        @model.filter_id = "Rich Text Editor"
+        @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.tinymce.html"
+      end
     end
   end
   
