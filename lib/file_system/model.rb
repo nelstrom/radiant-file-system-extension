@@ -1,6 +1,6 @@
 module FileSystem
   module Model
-    FILENAME_REGEX = /^(?:(\d+)_)?([^.]+)(?:\.([\-\w]+))?/
+    FILENAME_REGEX = /^(?:(\d+)_)?([^.]+)(?:\.([\.\-\w]+))?/
     CONTENT_TYPES = {"html" => "text/html", 
                      "css" => "text/css",
                      "xml" => "application/xml",

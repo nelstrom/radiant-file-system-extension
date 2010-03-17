@@ -193,6 +193,7 @@ describe FileSystem::Model do
     'name_with.ext-dash',
     'name-with.ext-dash',
     'File with spaces.html',
+    'file-with-double-extension.tinymce.html',
     %{\!\@\#\$\%\^\&\*\(\)\[\]\{\}\|\=\-\_\+\/\*\'\"\;\:\,\<\>\`\~.html}
     ].each do |filename|
       it "should include #{filename}" do
@@ -206,6 +207,21 @@ describe FileSystem::Model do
       it "should include #{filename}" do
         filename.should_not match(FileSystem::Model::FILENAME_REGEX)
       end
+    end
+  end
+
+  describe "extension" do
+    it "should include last.ext for normal (single) extensions" do
+      'file-with-single-extension.html'.match(FileSystem::Model::FILENAME_REGEX)
+      name, extension = $2, $3
+      name.should == 'file-with-single-extension'
+      extension.should == 'html'
+    end
+    it "should include last.two.ext for double extensions" do
+      'file-with-double-extension.tinymce.html'.match(FileSystem::Model::FILENAME_REGEX)
+      name, extension = $2, $3
+      name.should == 'file-with-double-extension'
+      extension.should == 'tinymce.html'
     end
   end
   

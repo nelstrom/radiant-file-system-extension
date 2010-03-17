@@ -189,7 +189,7 @@ module FileSystem::Model::PageExtensions
     end
     def filter_from_extension(extension)
       if filters.include?(extension)
-        return extension.camelize 
+        return extension.camelize
       else
         if FileSystem::Model::EXTENSION_FILTER_MAP.has_key?(extension)
           return FileSystem::Model::EXTENSION_FILTER_MAP[extension]
