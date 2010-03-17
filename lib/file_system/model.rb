@@ -10,6 +10,16 @@ module FileSystem
                      "yaml" => "text/x-yaml",
                      "atom" => "application/atom+xml"}
 
+    FILTER_EXTENSION_MAP = {
+      "Rich Text Editor" => "tinymce.html",
+    }
+    # For this to work, need to modify FILENAME_REGEX to accept
+    # name.sub.ext - so that $3 => 'sub.ext'  (instead of 'sub')
+    # EXTENSION_FILTER_MAP = FILTER_EXTENSION_MAP.invert
+    EXTENSION_FILTER_MAP = {
+      "tinymce" => "Rich Text Editor"
+    }
+
     def self.included(base)
       base.extend ClassMethods
     end
