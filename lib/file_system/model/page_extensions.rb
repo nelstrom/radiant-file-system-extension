@@ -125,7 +125,7 @@ module FileSystem::Model::PageExtensions
     
 
     def part_files(path)
-      Dir[path + "/*"].select{|f| !File.directory?(f) && f !~ /\.ya?ml$/ }
+      Dir[path + "/*"].select{|f| !File.directory?(f) && f !~ /\.ya?ml$/  && f !~ /~$/ }
     end
     
     def yaml_file(path)
