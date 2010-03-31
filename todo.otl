@@ -1,17 +1,16 @@
-[_] multisite behaviour
-	[_] fs:to_db
-		[_] load pages correctly into the database
-	[_] db:to_fs
-		[_] current behaviour workable?
-		[_] s/pages/sites
+[X] multisite behaviour
+	[X] fs:to_db
+		[X] load pages correctly into the database
+	[X] db:to_fs
+		[X] s/pages/sites
 		: Current behaviour:
 		: /design/pages
 		: 			   /vimcasts-org
 		: 			   /drewneil-com
 		: Desired behaviour:
-		: /designe/sites
-		: 			    /vimcasts-org
-		: 			    /drewneil-com
+		: /design/sites
+		: 			   /vimcasts-org
+		: 			   /drewneil-com
 [_] Behavioural changes
 	[X] Do not delete all records from database where the file system does not even have a folder corresponding to that model 
 	: (e.g. rake file_system:to_files:layouts only saves layouts to file_system
