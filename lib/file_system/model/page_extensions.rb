@@ -20,6 +20,14 @@ module FileSystem::Model::PageExtensions
   end
   
   module ClassMethods
+    def path
+      if defined?(MultiSiteExtension)
+        File.join(RAILS_ROOT, "design", "sites")
+      else
+        super
+      end
+    end
+
     def find_or_initialize_by_filename_with_dir_structure(filename)
       slug = File.basename(filename)
       slug = "/" if slug == "pages"
@@ -62,7 +70,11 @@ module FileSystem::Model::PageExtensions
     end
     
     def root_paths(path = self.path)
-      Dir[path + "/"].select{|f| File.directory?(f)}
+      if defined?(MultiSiteExtension)
+        Dir[path + "/" + "*"].select{|f| File.directory?(f)}
+      else
+        Dir[path + "/"].select{|f| File.directory?(f)}
+      end
     end
     
     def paths(path = self.path)
