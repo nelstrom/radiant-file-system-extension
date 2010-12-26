@@ -7,6 +7,7 @@ module FileSystem
                      "rss" => "application/rss+xml",
                      "txt" => "text/plain",
                      "js" => "text/javascript",
+                     "json" => "application/json",
                      "yaml" => "text/x-yaml",
                      "atom" => "application/atom+xml"}
 
