@@ -9,7 +9,7 @@ end
 class MockSubclass < MockModel
 end
 
-class FileSystemModelTest < Test::Unit::TestCase
+class FileSystemModelTest < ActiveSupport::TestCase
   
   def setup
     MockModel.send :include, FileSystem::Model
