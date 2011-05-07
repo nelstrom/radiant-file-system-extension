@@ -1,13 +1,18 @@
 module FileSystem
   module Model
-    FILENAME_REGEX = /^(?:(\d+)_)?([^.]+)(?:\.([\-\w]+))?/
+    FILENAME_REGEX = /^(?:(\d+)_)?([^.]+)(?:\.([\.\-\w]+))?/
     CONTENT_TYPES = {"html" => "text/html", 
                      "css" => "text/css",
                      "xml" => "application/xml",
                      "rss" => "application/rss+xml",
                      "txt" => "text/plain",
                      "js" => "text/javascript",
-                     "yaml" => "text/x-yaml"}
+                     "json" => "application/json",
+                     "yaml" => "text/x-yaml",
+                     "atom" => "application/atom+xml"}
+
+    # The tiny_paper extension adds the filter "Rich Text Editor"
+    FILTER_EXTENSION_MAP = { "Rich Text Editor" => "tinymce.html" }
 
     def self.included(base)
       base.extend ClassMethods
@@ -76,7 +81,7 @@ module FileSystem
       self.draft_content = content if defined?(ConcurrentDraft)
       self.content_type = CONTENT_TYPES[type_or_filter] if respond_to?(:content_type)
       if respond_to?(:filter_id) 
-        self.filter_id = filters.include?(type_or_filter) ? type_or_filter.camelize : nil
+        self.filter_id = filter_from_extension(type_or_filter)
       end
     end
     
@@ -90,13 +95,24 @@ module FileSystem
         basename = self.name
         extension = case 
           when respond_to?(:filter_id)
-            self.filter_id.blank? ? default_content_type : self.filter_id.downcase
+            self.filter_id.blank? ? default_content_type : extension_from_filter(self)
           when respond_to?(:content_type)
             CONTENT_TYPES.invert[self.content_type] || default_content_type
           else
             default_content_type
         end
         output << File.join(self.class.path, [basename, extension].join("."))
+      end
+    end
+
+    def extension_from_filter(model)
+      FileSystem::Model::FILTER_EXTENSION_MAP[model.filter_id] || model.filter_id.downcase
+    end
+    def filter_from_extension(extension)
+      if filters.include?(extension)
+        extension.camelize
+      else
+        FileSystem::Model::FILTER_EXTENSION_MAP.invert[extension]
       end
     end
 

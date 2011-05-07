@@ -61,6 +61,7 @@ For Layouts, the file extension translates to the content type. The following is
   .txt   =>  "text/plain"
   .js    =>  "text/javascript"
   .yaml  =>  "text/x-yaml"
+  .atom  =>  "application/atom+xml"
 
 === Load
 

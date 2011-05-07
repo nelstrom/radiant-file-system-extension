@@ -114,24 +114,43 @@ describe FileSystem::Model do
       @model.filter_id.should be_nil
     end
     
-  end
-  
-  describe "filename" do
-    before(:each) do
-      class << @model
-        attr_accessor :name
-      end
-      @model.name = "example_name"
-    end
-    it "should use name with default extension" do
-      @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.html"
-    end
-    it "should use filter as extension" do
+    it "should map filter_id from FILTER_EXTENSION_MAP" do
       class << @model
         attr_accessor :filter_id
       end
       @model.filter_id = "Textile"
-      @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.textile"
+      @model.should_receive(:open).with("005_new_name.tinymce.html").and_return(@file_mock)
+      @model.load_file("005_new_name.tinymce.html")
+      @model.filter_id.should == "Rich Text Editor"
+    end
+    
+  end
+  
+  describe "filename" do
+    describe "extension" do
+      before(:each) do
+        class << @model
+          attr_accessor :name
+        end
+        @model.name = "example_name"
+      end
+      it "should use default when filter is nil" do
+        @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.html"
+      end
+      it "should use filter, downcased" do
+        class << @model
+          attr_accessor :filter_id
+        end
+        @model.filter_id = "Textile"
+        @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.textile"
+      end
+      it "should be derived from FILTER_EXTENSION_MAP" do
+        class << @model
+          attr_accessor :filter_id
+        end
+        @model.filter_id = "Rich Text Editor"
+        @model.filename.should == "#{RAILS_ROOT}/design/mock_models/example_name.tinymce.html"
+      end
     end
   end
   
@@ -193,6 +212,7 @@ describe FileSystem::Model do
     'name_with.ext-dash',
     'name-with.ext-dash',
     'File with spaces.html',
+    'file-with-double-extension.tinymce.html',
     %{\!\@\#\$\%\^\&\*\(\)\[\]\{\}\|\=\-\_\+\/\*\'\"\;\:\,\<\>\`\~.html}
     ].each do |filename|
       it "should include #{filename}" do
@@ -206,6 +226,21 @@ describe FileSystem::Model do
       it "should include #{filename}" do
         filename.should_not match(FileSystem::Model::FILENAME_REGEX)
       end
+    end
+  end
+
+  describe "extension" do
+    it "should include last.ext for normal (single) extensions" do
+      'file-with-single-extension.html'.match(FileSystem::Model::FILENAME_REGEX)
+      name, extension = $2, $3
+      name.should == 'file-with-single-extension'
+      extension.should == 'html'
+    end
+    it "should include last.two.ext for double extensions" do
+      'file-with-double-extension.tinymce.html'.match(FileSystem::Model::FILENAME_REGEX)
+      name, extension = $2, $3
+      name.should == 'file-with-double-extension'
+      extension.should == 'tinymce.html'
     end
   end
   

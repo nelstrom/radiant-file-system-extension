@@ -137,7 +137,7 @@ module FileSystem::Model::PageExtensions
     def load_parts(files)
       files.each do |f|
         name, ext = $2, $3 if File.basename(f) =~ FileSystem::Model::FILENAME_REGEX
-        filter_id = filters.include?(ext) ? ext.camelize : nil
+        filter_id = filter_from_extension(ext)
         if part = PagePart.find_by_name_and_page_id(name, self.id)
           part.update_attributes(:filter_id => filter_id, :content => open(f).read)
         else
@@ -155,7 +155,7 @@ module FileSystem::Model::PageExtensions
     def save_parts
       self.parts.each do |part|
         part_bname = part.name
-        part_ext = part.filter_id.blank? ? layout_content_type : part.filter_id.downcase
+        part_ext = part.filter_id.blank? ? layout_content_type : extension_from_filter(part)
         part_fname = File.join(self.filename, [part_bname, part_ext].join("."))
         File.open(part_fname, 'w') {|f| f.write part.content }
       end

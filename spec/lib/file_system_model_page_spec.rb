@@ -83,6 +83,38 @@ describe Page do
   
 end
 
+describe "Page Part" do
+  describe "deriving filter from extension" do
+    [
+      ["Textile", "textile"],
+      ["Rich Text Editor", "tinymce.html"],
+      [nil, "nonexistantfilter"],
+    ].each do |pair|
+      filter_id, ext = pair
+      it "should use #{filter_id} filter for .#{ext} extension." do
+        @page = Page.new
+        filter = @page.filter_from_extension(ext)
+        filter.should == filter_id
+      end
+    end
+  end
+  describe "deriving extension from filter" do
+    [
+      ["Textile", "textile"],
+      ["Rich Text Editor", "tinymce.html"],
+      ["NonExistantFilter", "nonexistantfilter"],
+    ].each do |pair|
+      filter_id, ext = pair
+      it "should use .#{ext} extension for #{filter_id} filter" do
+        @page = Page.new
+        part = @page.parts.build(:filter_id => filter_id)
+        extension = @page.extension_from_filter(part)
+        extension.should == ext
+      end
+    end
+  end
+end
+
 describe FileNotFoundPage do
   it "should inherit path from Page" do
     FileNotFoundPage.path.should == Page.path
