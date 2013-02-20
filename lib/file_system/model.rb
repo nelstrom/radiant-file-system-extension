@@ -78,6 +78,7 @@ module FileSystem
       content = open(file).read
       self.name = name
       self.content = content
+      self.draft_content = content if defined?(ConcurrentDraft)
       self.content_type = CONTENT_TYPES[type_or_filter] if respond_to?(:content_type)
       if respond_to?(:filter_id) 
         self.filter_id = filter_from_extension(type_or_filter)

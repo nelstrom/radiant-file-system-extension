@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 class MockModel
   def self.class_of_active_record_descendant(klass)
@@ -49,6 +49,7 @@ describe FileSystem::Model do
     before(:each) do
       class << @model
         attr_accessor :name, :content
+        attr_accessor :draft_content if defined?(ConcurrentDraft)
       end
       @model.name = "Original name"
       @model.content = "Original content in the database"
