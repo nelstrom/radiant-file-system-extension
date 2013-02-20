@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 class MockPage
   def self.class_of_active_record_descendant(klass)
